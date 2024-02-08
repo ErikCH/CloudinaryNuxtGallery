@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
     ];
   }
 
-  // test
+  // test2
   const data: Results = await cloudinary.v2.search
     .expression("resource_type:image")
     .sort_by("public_id", "desc")
