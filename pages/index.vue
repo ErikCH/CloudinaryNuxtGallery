@@ -37,6 +37,7 @@ function refreshPics() {
         type="button"
         @click="open()"
         class="bg-blue-300 p-4 text-white rounded w-48"
+        disabled
       >
         Upload an Image
       </button>
