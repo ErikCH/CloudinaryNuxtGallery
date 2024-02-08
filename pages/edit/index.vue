@@ -12,7 +12,7 @@ const attributes = reactive({ effect: {} });
 </script>
 <template>
   <div class="flex flex-col items-center gap-4 w-3/4 m-auto">
-    <h1 class="font-extrabold text-4xl">Select Customizations to Text</h1>
+    <h1 class="font-extrabold text-4xl">Select Customizations</h1>
 
     <div class="grid grid-cols-2 gap-4">
       <!--Controls-->
