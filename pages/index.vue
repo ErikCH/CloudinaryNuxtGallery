@@ -9,7 +9,6 @@ interface Result {
 function onUpload(result: Ref<Result>) {
   imageInfo.value = result.value;
   console.log("upoad", result.value.info);
-  refresh();
 }
 
 const { data, refresh } = useFetch("/api/cloud");
