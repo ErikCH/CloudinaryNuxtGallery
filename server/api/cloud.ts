@@ -11,9 +11,8 @@ export default defineEventHandler(async (event) => {
   const data: Results = await cloudinary.v2.search
     .expression("resource_type:image")
     .sort_by("public_id", "desc")
-    .max_results(10)
+    .max_results(12)
     .execute();
-  //   console.log("data", data);
   return {
     ...data
   };
