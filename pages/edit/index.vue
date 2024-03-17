@@ -1,14 +1,38 @@
 <script setup lang="ts">
-const route = useRoute();
-const slider = ref(100);
-const fontSlider = ref(55);
-const blurSlider = ref(0);
-const text = ref("Hello");
+  const route = useRoute();
+  const opacitySlider = ref(100);
+  const fontSlider = ref(55);
+  const blurSlider = ref(0);
+  const text = ref("Hello");
 
-console.log("route", route.query);
-const photo = ref(route.query.photo as string);
+  const photo = ref(route.query.photo as string);
+  const blurSliderComputed = computed(() => blurSlider.value * 20);
 
-const attributes = reactive({ effect: {} });
+  const attributes = reactive({
+    effect: {
+      alt: "house",
+      width: "500",
+      height: "500",
+      src: photo,
+      opacity: opacitySlider,
+      blur: blurSliderComputed,
+      overlays: [
+        {
+          position: {
+            gravity: "south",
+            y: 5,
+          },
+          text: {
+            color: "blue",
+            fontFamily: "Source Sans Pro",
+            fontSize: fontSlider,
+            fontWeight: "black",
+            text: text || " ",
+          },
+        },
+      ],
+    },
+  });
 </script>
 <template>
   <div class="flex flex-col items-center gap-4 w-3/4 m-auto">
@@ -26,118 +50,42 @@ const attributes = reactive({ effect: {} });
             placeholder="Enter Text"
           />
         </div>
-        <section
-          class="border-2 border-orange-300 p-4 flex flex-col items-center w-full"
+        <ImageSlider v-model="opacitySlider" class="border-purple-300"
+          >Opacity</ImageSlider
         >
-          <label
-            for="default-range"
-            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >Opacity Slider</label
-          >
-          <input
-            id="default-range"
-            type="range"
-            class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
-            v-model="slider"
-          />
-          {{ slider }}
-        </section>
-        <section
-          class="border-2 border-green-300 p-4 flex flex-col items-center w-full"
+        <ImageSlider v-model="fontSlider" class="border-green-300"
+          >Font Size</ImageSlider
         >
-          <label
-            for="default-range"
-            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >Font Size</label
-          >
-          <input
-            id="default-range"
-            type="range"
-            class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
-            v-model="fontSlider"
-          />
-          {{ fontSlider }}
-        </section>
-        <section
-          class="border-2 border-green-300 p-4 flex flex-col items-center w-full"
+        <ImageSlider v-model="blurSlider" class="border-orange-300"
+          >Blur</ImageSlider
         >
-          <label
-            for="default-range"
-            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >Blur</label
-          >
-          <input
-            id="default-range"
-            type="range"
-            class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
-            v-model="blurSlider"
-          />
-          {{ blurSlider }}
-        </section>
+
         <section class="flex items-center justify-center gap-4">
-          <button
-            class="bg-yellow-400 text-white rounded p-2"
-            @click="
-              attributes.effect = {
-                ...attributes.effect,
-                'remove-background': true
-              }
-            "
+          <AttributeButton
+            class="bg-blue-500"
+            v-model="attributes"
+            effect="remove-background"
+            >Remove Background</AttributeButton
           >
-            Remove Background
-          </button>
-          <button
-            class="bg-yellow-400 text-white rounded p-2"
-            @click="
-              attributes.effect = {
-                ...attributes.effect,
-                grayscale: true
-              }
-            "
+          <AttributeButton
+            class="bg-green-500"
+            v-model="attributes"
+            effect="grayscale"
+            >Grayscale</AttributeButton
           >
-            Grayscale
-          </button>
-          <button
-            class="bg-yellow-400 text-white rounded p-2"
-            @click="
-              attributes.effect = {
-                ...attributes.effect,
-                pixelate: true
-              }
-            "
+          <AttributeButton
+            class="bg-purple-500"
+            v-model="attributes"
+            effect="pixelate"
+            >Pixelate</AttributeButton
           >
-            Pixelate
-          </button>
         </section>
       </section>
       <!--End of controls-->
       <!--Photos-->
       <div class="flex w-full">
         <section v-if="$route.query.photo" class="w-full flex justify-center">
-          <CldImage
-            alt="house"
-            width="500"
-            height="auto"
-            :src="photo!"
-            :opacity="slider"
-            :blur="blurSlider * 20"
-            :overlays="[
-              {
-                position: {
-                  gravity: 'south',
-                  y: 60
-                },
-                text: {
-                  color: 'blue',
-                  fontFamily: 'Source Sans Pro',
-                  fontSize: fontSlider,
-                  fontWeight: 'black',
-                  text: text || ' '
-                }
-              }
-            ]"
-            v-bind="attributes.effect"
-          />
+          <CldImage v-bind="attributes.effect" />
         </section>
       </div>
     </div>

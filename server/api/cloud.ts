@@ -6,6 +6,9 @@ export default defineEventHandler(async (event) => {
     resources: [
       {
         public_id: string;
+        context: {
+          alt: string;
+        };
       }
     ];
   }
@@ -13,15 +16,16 @@ export default defineEventHandler(async (event) => {
   cloudinary.v2.config({
     cloud_name: environmental.public.cloudinary.cloudName,
     api_key: environmental.cloudKey,
-    api_secret: environmental.cloudSecret
+    api_secret: environmental.cloudSecret,
   });
 
   const data: Results = await cloudinary.v2.search
     .expression("resource_type:image")
+    .with_field("context")
     .sort_by("public_id", "desc")
     .max_results(12)
     .execute();
   return {
-    ...data
+    ...data,
   };
 });
